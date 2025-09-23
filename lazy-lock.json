@@ -10,6 +10,7 @@
   "blink.cmp": { "branch": "main", "commit": "4f38ce99a472932d5776337f08f7a8180f1f571a" },
   "blink.compat": { "branch": "main", "commit": "2ed6d9a28b07fa6f3bface818470605f8896408c" },
   "cmp-dap": { "branch": "master", "commit": "ea92773e84c0ad3288c3bc5e452ac91559669087" },
+  "fluoromachine.nvim": { "branch": "main", "commit": "d638ea221b4c6636978f49c1987d10ff2733c23d" },
   "friendly-snippets": { "branch": "main", "commit": "fc8f183479a472df60aa86f00e295462f2308178" },
   "gitsigns.nvim": { "branch": "main", "commit": "7010000889bfb6c26065e0b0f7f1e6aa9163edd9" },
   "guess-indent.nvim": { "branch": "main", "commit": "84a4987ff36798c2fc1169cbaff67960aed9776f" },
