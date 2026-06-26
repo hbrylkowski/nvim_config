@@ -1,12 +1,7 @@
--- Customize Treesitter
-
----@type LazySpec
 return {
   "nvim-treesitter/nvim-treesitter",
+  branch = "main",
   opts = {
-    ensure_installed = { 'go', 'lua', 'typescript', 'javascript', 'json', 'yaml', 'html', 'css', 'bash', 'python', 'markdown', 'scala' },
-    highlight = {
-      enable = true,
-    },
+    ensure_installed = { "markdown", "markdown_inline", "python" },
   },
 }

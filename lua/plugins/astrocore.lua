@@ -1,5 +1,3 @@
-if true then return {} end -- WARN: REMOVE THIS LINE TO ACTIVATE THIS FILE
-
 -- AstroCore provides a central place to modify mappings, vim options, autocommands, and more!
 -- Configuration documentation can be found with `:h astrocore`
 -- NOTE: We highly recommend setting up the Lua Language Server (`:LspInstall lua_ls`)
@@ -32,9 +30,45 @@ return {
       },
       filename = {
         [".foorc"] = "fooscript",
+        -- Docker compose files - use yaml.docker-compose for better highlighting if available
+        ["docker-compose.yml"] = "yaml.docker-compose",
+        ["docker-compose.yaml"] = "yaml.docker-compose",
+        ["compose.yml"] = "yaml.docker-compose",
+        ["compose.yaml"] = "yaml.docker-compose",
       },
       pattern = {
         [".*/etc/foo/.*"] = "fooscript",
+        -- Match docker-compose.*.yml files (overrides)
+        ["docker%-compose%..*%.yml"] = "yaml.docker-compose",
+        ["docker%-compose%..*%.yaml"] = "yaml.docker-compose",
+        -- Kubernetes manifest files
+        [".*/k8s/.*%.ya?ml"] = "yaml.kubernetes",
+        [".*/kubernetes/.*%.ya?ml"] = "yaml.kubernetes",
+        [".*/manifests/.*%.ya?ml"] = "yaml.kubernetes",
+        [".*/helm/.*%.ya?ml"] = "yaml.kubernetes",
+        [".*/deploy/.*%.ya?ml"] = "yaml.kubernetes",
+        [".*%.ya?ml"]= function(path, bufnr)
+          local content = vim.api.nvim_buf_get_lines(bufnr, 0, 20, false)
+          for _, line in ipairs(content) do
+            if line:match("^apiVersion:%s*k8s%.io") or 
+               line:match("^apiVersion:%s*v%d+") or
+               line:match("^kind:%s*Deployment") or
+               line:match("^kind:%s*Service") or
+               line:match("^kind:%s*ConfigMap") or
+               line:match("^kind:%s*Secret") or
+               line:match("^kind:%s*Ingress") or
+               line:match("^kind:%s*Pod") or
+               line:match("^kind:%s*DaemonSet") or
+               line:match("^kind:%s*StatefulSet") or
+               line:match("^kind:%s*Job") or
+               line:match("^kind:%s*CronJob") or
+               line:match("^kind:%s*ReplicaSet") or
+               line:match("^kind:%s*PersistentVolume") then
+              return "yaml.kubernetes"
+            end
+          end
+          return "yaml"
+        end,
       },
     },
     -- vim options can be configured here
@@ -45,6 +79,7 @@ return {
         spell = false, -- sets vim.opt.spell
         signcolumn = "yes", -- sets vim.opt.signcolumn to yes
         wrap = false, -- sets vim.opt.wrap
+        syntax = "on", -- enable vim regex syntax highlighting
       },
       g = { -- vim.g.<key>
         -- configure global vim variables (vim.g)
@@ -79,6 +114,20 @@ return {
 
         -- setting a mapping to false will disable it
         -- ["<C-S>"] = false,
+      },
+    },
+    -- Enable vim regex syntax highlighting as fallback for disabled treesitter
+    autocmds = {
+      syntax_fallback = {
+        {
+          event = "FileType",
+          desc = "Enable vim syntax highlighting fallback",
+          callback = function()
+            if not vim.bo.syntax or vim.bo.syntax == "" then
+              vim.cmd("set syntax=on")
+            end
+          end,
+        },
       },
     },
   },
